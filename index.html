@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Morango</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <style>
+  @import "tailwindcss";
+
+  body {
+    font-family: "Poppins", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+    font-size: 15px;
+    padding: 9px;
+    background-color: #1a1a1a;
+    transition: all 0.3s ease-in-out;
+  }
+
+  span {
+    font-size: 10px;
+    font-weight: 200;
+  }
+
+  p {
+    font-size: 12px;
+    font-weight: 200;
+  }
+
+  /* Animação de pulsação na imagem */
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  /* Animação de scale nos ícones dos botões da barra de navegação */
+  @keyframes buttonScale {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  /* Linha que aparece ao clicar nos botões de navegação */
+ .nav-item {
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.nav-item::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #FF2659;
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.4s ease-in-out;
+}
+
+.nav-item.selected::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+  /* Efeito Glassmorphism com imagem de fundo e desfoque */
+  .glass-nav {
+    background: url('https://www.example.com/your-image.jpg'); /* Sua imagem de fundo */
+    background: rgba(26, 26, 26, 0.6);
+    background-size: cover; /* Ajusta a imagem para cobrir toda a área */
+    background-position: center;
+    backdrop-filter: blur(20px); /* Efeito de desfoque */
+    -webkit-backdrop-filter: blur(20px); /* Para Safari */
+    border-radius: 55px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Sombra mais suave */
+    position: fixed;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 0;
+    z-index: 10;
+  }
+
+  /* Alinhando os títulos */
+  .nav-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 0 10px; /* Espaçamento entre os títulos */
+  }
+
+  .nav-item span {
+    color: white;
+    text-align: center;
+    margin-top: 5px;
+  }
+  
+  #episodios-section .bg-gray-700 {
+    background: linear-gradient(135deg, #1a1a1a, #3e3e3e);
+    border-radius: 12px;
+    padding: 12px; /* Um pouco maior para não ficar tão pequeno */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, background 0.3s ease;
+    transform-origin: center;
+    will-change: transform;
+    width: 95%; /* Um pouco mais largo, mas ainda menor que antes */
+    margin: 10px auto; /* Centralizando e ajustando o espaçamento */
+  }
+
+  #episodios-section .bg-gray-700:active {
+    transform: scale(1.05); /* Mantendo o efeito de clique */
+  }
+
+  #episodios-section h3 {
+    font-size: 16px; /* Aumentei um pouco para não perder legibilidade */
+  }
+
+  #episodios-section p {
+    font-size: 13px; /* Também ajustado para não ficar pequeno demais */
+  }
+
+  #episodios-section {
+    position: relative;
+    overflow: hidden;
+  }
+
+  #player {
+    display: none;
+    align-items: center;
+    border-radius: 1.5rem; /* Bordas arredondadas */
+    background: rgba(0, 0, 0, 0.6); /* Fundo com opacidade */
+    backdrop-filter: blur(12px); /* Efeito Glassmorphism */
+    -webkit-backdrop-filter: blur(12px); /* Para o Safari */
+  }
+
+  #player .flex-1 {
+    display: flex;
+    justify-content: center;
+  }
+
+  #player img {
+    border-radius: 0.5rem; /* Bordas arredondadas para a imagem do episódio */
+  }
+
+  button {
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+
+  button:hover {
+    transform: scale(1.1);
+    color: #FF2659; /* Cor de destaque para o hover */
+  }
+
+  </style>
+</head>
+<body>
+  <div class="max-w-md mx-auto">
+    <!-- Header -->
+    <div class="flex items-center p-4">
+      <i class="fas fa-arrow-left text-white text-xl button-animate cursor-pointer hover:text-amaranto transition-colors duration-300"></i>
+    </div>
+    <!-- Content -->
+    <div class="flex items-center p-4 bg-gray-700 rounded-lg transition-all duration-500">
+      <img id="strawberry-img" alt="Image of a strawberry" class="w-16 h-16 rounded-lg cursor-pointer hover:scale-110 transition-transform duration-300" height="100" src="https://storage.googleapis.com/a1aa/image/IKXlnayH8hclhok3cixorWXiG60KwDKvhZKO0v-bwuQ.jpg" width="100"/>
+      <div class="ml-4">
+        <h1 class="text-xl font-bold text-white">Como cuidar do seu Morango?</h1>
+        <p class="text-gray-400">Habilidades e técnicas</p>
+        <div class="flex items-center text-gray-400 mt-1">
+          <i class="fas fa-star text-yellow-500"></i>
+          <span class="ml-1">
+            4,8 (11K) • Desenvolvimento Interpessoal
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Seção com "Episódios" e "Sobre" -->
+    <div class="mt-6">
+      <div class="flex justify-between" style="width: 200px;">
+        <h2 class="text-xl font-bold text-white nav-item" id="episodios">Episódios</h2>
+        <h2 class="text-xl font-bold text-white nav-item" id="sobre">Sobre</h2>
+      </div>
+    </div>
+
+    <!-- Descrição do podcast, inicialmente escondida -->
+    <div id="descricao" class="mt-4 text-gray-400 hidden">
+      <p>
+        "Como cuidar do seu Morango?" é uma reflexão íntima sobre como nutrir e entender o ser que você ama. No episódio de hoje, exploramos as habilidades e técnicas para manter um relacionamento saudável e cheio de carinho, baseado na confiança, comunicação e, claro, muito cuidado. Um podcast  para quem deseja aprender a cuidar de quem ama com delicadeza e atenção.
+      </p>
+    </div>
+    <!-- Seção de Episódios -->
+    <div id="episodios-section" class="mt-6">
+      <div class="bg-gray-700 p-4 rounded-lg mb-4" data-episodio="1" id="episodio-1" data-audio-src="introducao-morango.mp3">
+        <h3 class="text-xl font-semibold text-white">Episódio 1: Introdução ao Morango</h3>
+        <p class="text-gray-400">Neste episódio, exploramos a essência do cuidado e da atenção em um relacionamento.</p>
+        <div class="flex mt-3 space-x-4 text-gray-400">
+          <button class="hover:text-white transition-colors duration-200">
+            <i class="fas fa-share-alt"></i>
+          </button>
+          <button class="hover:text-white transition-colors duration-200">
+            <i class="fas fa-download"></i>
+          </button>
+          <button class="hover:text-white transition-colors duration-200">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-gray-700 p-4 rounded-lg mb-4" data-episodio="2" id="episodio-2" data-audio-src="episodio2morango.mp3">
+        <h3 class="text-xl font-semibold text-white">Episódio 2: O Cuidado Diário</h3>
+        <p class="text-gray-400">Falamos sobre como a comunicação e o carinho são fundamentais para nutrir um amor duradouro.</p>
+        <div class="flex mt-3 space-x-4 text-gray-400">
+          <button class="hover:text-white transition-colors duration-200">
+            <i class="fas fa-share-alt"></i>
+          </button>
+          <button class="hover:text-white transition-colors duration-200">
+            <i class="fas fa-download"></i>
+          </button>
+          <button class="hover:text-white transition-colors duration-200">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-gray-700 p-4 rounded-lg mb-4" data-episodio="3" id="episodio-3" data-audio-src="episodio3morango.mp3">
+        <h3 class="text-xl font-semibold text-white">Episódio 3: Superando Desafios</h3>
+        <p class="text-gray-400">Aqui discutimos como lidar com os desafios que surgem em qualquer relacionamento e como superá-los juntos.</p>
+        <div class="flex mt-3 space-x-4 text-gray-400">
+          <button class="hover:text-white transition-colors duration-200">
+            <i class="fas fa-share-alt"></i>
+          </button>
+          <button class="hover:text-white transition-colors duration-200">
+            <i class="fas fa-download"></i>
+          </button>
+          <button class="hover:text-white transition-colors duration-200">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="player" style="margin-bottom: 20px;" class="hidden fixed bottom-16 left-0 w-full bg-gray-900 shadow-lg p-3 flex items-center justify-between z-50 rounded-3xl backdrop-blur-lg bg-opacity-60">
+      <!-- Ícone do episódio -->
+      <div class="flex items-center space-x-3">
+        <img src="https://storage.googleapis.com/a1aa/image/IKXlnayH8hclhok3cixorWXiG60KwDKvhZKO0v-bwuQ.jpg" class="w-12 h-12 rounded-lg" alt="Capa do episódio">
+        <div id="player-title">
+          <h3 class="text-white text-sm font-semibold">Episódio 1: Introdução ao Morango</h3>
+        </div>
+      </div>
+
+      <!-- Controles do player -->
+      <div class="flex items-center space-x-6 flex-1 justify-center">
+        <button id="prev-btn" class="text-gray-400 text-2xl">
+          <i class="fas fa-backward"></i>
+        </button>
+
+        <button id="play-pause-btn" class="text-white text-3xl">
+          <i class="fas fa-play"></i>
+        </button>
+
+        <button id="next-btn" class="text-gray-400 text-2xl">
+          <i class="fas fa-forward"></i>
+        </button>
+      </div>
+
+      <audio id="audio-player"></audio>
+    </div>
+
+    <script>
+      // Pulsação na imagem
+      document.getElementById('strawberry-img').addEventListener('click', function() {
+        this.classList.add('pulse');
+        setTimeout(() => {
+          this.classList.remove('pulse');
+        }, 1000); // remove after 1s
+      });
+
+      // Adicionando a classe 'selected' ao item 'Episódios' e 'Início' por padrão ao carregar a página
+      document.addEventListener('DOMContentLoaded', function() {
+        const episodiosItem = document.getElementById('episodios');
+        episodiosItem.classList.add('selected'); // Adiciona a linha ao "Episódios" inicialmente
+        
+        const homeItem = document.getElementById('home');
+        homeItem.classList.add('selected'); // Adiciona a linha ao "Início" inicialmente
+      });
+
+      // Clique nos itens "Episódios", "Sobre" e itens do footer para adicionar a linha
+      const navItems = document.querySelectorAll('.nav-item');
+      
+      navItems.forEach(item => {
+        item.addEventListener('click', () => {
+          // Remover a classe 'selected' de todos os itens
+          navItems.forEach(nav => nav.classList.remove('selected'));
+
+          // Adicionar a classe 'selected' ao item clicado
+          item.classList.add('selected');
+        });
+      });
+
+      // Mostrar a descrição ao clicar em "Sobre" e esconder novamente ao clicar em "Episódios"
+      document.getElementById('sobre').addEventListener('click', function() {
+        const descricao = document.getElementById('descricao');
+        
+        // Verifica se a descrição está oculta, e altera o estado dela
+        if (descricao.classList.contains('hidden')) {
+          descricao.classList.remove('hidden');
+        } else {
+          descricao.classList.add('hidden');
+        }
+      });
+
+      // Remover a descrição quando clicar em "Episódios"
+      document.getElementById('episodios').addEventListener('click', function() {
+        document.getElementById('episodios-section').style.display = 'block'; // Sempre exibe os episódios
+        document.getElementById('descricao').classList.add('hidden'); // Esconde a descrição ao trocar
+        document.getElementById('player').classList.add('hidden'); // Esconde o player ao trocar para episódios
+      });
+
+      document.getElementById('sobre').addEventListener('click', function() {
+        document.getElementById('descricao').classList.remove('hidden'); // Exibe a descrição
+        document.getElementById('episodios-section').style.display = 'none'; // Esconde os episódios
+        document.getElementById('player').classList.add('hidden'); // Esconde o player ao mostrar a descrição
+      });
+
+      // Função para configurar o player com o episódio e áudio corretos
+      function setupPlayer(episodeTitle, audioSrc) {
+        const audioPlayer = document.getElementById('audio-player');
+        const playerTitle = document.getElementById('player-title');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+
+        // Configura o título e a fonte do áudio
+        playerTitle.innerHTML = `<h3 class="text-white text-sm font-semibold">${episodeTitle}</h3>`;
+        audioPlayer.src = audioSrc;
+
+        // Verifica se o áudio está tocando. Se sim, pausa e reinicia.
+        if (!audioPlayer.paused) {
+          audioPlayer.pause();  // Pausa o áudio
+          audioPlayer.currentTime = 0;  // Reinicia o áudio para o começo
+        }
+        audioPlayer.play();  // Reproduz o áudio
+
+        // Muda o ícone do botão para pausa
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+
+        // Exibe o player removendo a classe 'hidden'
+        const player = document.getElementById('player'); // Certifique-se de que o player está definido
+        player.style.display = 'flex';  // Torna o player visível
+      }
+
+      document.getElementById('episodio-1').addEventListener('click', function() {
+        setupPlayer('Episódio 1: Introdução ao Morango', 'introducao-morango.mp3');
+      });
+
+      document.getElementById('episodio-2').addEventListener('click', function() {
+        setupPlayer('Episódio 2: O Cuidado Diário', 'episodio2morango.mp3');
+      });
+
+      document.getElementById('episodio-3').addEventListener('click', function() {
+        setupPlayer('Episódio 3: Superando Desafios', 'episodio3morango.mp3');
+      });
+
+      // Adicionar funcionalidade de pausa ao player
+      document.getElementById('play-pause-btn').addEventListener('click', function() {
+        const audioPlayer = document.getElementById('audio-player');
+        if (audioPlayer.paused) {
+          audioPlayer.play();
+          this.innerHTML = '<i class="fas fa-pause"></i>';
+        } else {
+          audioPlayer.pause();
+         this.innerHTML = '<i class="fas fa-play"></i>';
+        }
+      });
+
+      // Função para avançar para o próximo episódio
+      document.getElementById('next-btn').addEventListener('click', function() {
+        const currentEpisodeElem = document.querySelector('.bg-gray-700[style*="scale(1.05)"]');
+        if (currentEpisodeElem) {
+          // Encontre o próximo episódio (nextElementSibling)
+          let nextEpisodeElem = currentEpisodeElem.nextElementSibling;
+
+          // Verifique se o próximo elemento é realmente um episódio
+          while (nextEpisodeElem && !nextEpisodeElem.classList.contains('bg-gray-700')) {
+            nextEpisodeElem = nextEpisodeElem.nextElementSibling;
+          }
+
+          // Se encontramos o próximo episódio, inicie o áudio
+          if (nextEpisodeElem && nextEpisodeElem.classList.contains('bg-gray-700')) {
+            // Obtenha o título e o áudio do próximo episódio
+            const episodeTitle = nextEpisodeElem.querySelector('h3').innerText;
+            const audioSrc = nextEpisodeElem.getAttribute('data-audio-src'); // Atribua um atributo data-audio-src para cada episódio no HTML
+
+            // Chame a função que configura o player com o próximo episódio
+            setupPlayer(episodeTitle, audioSrc);
+
+            // Atualize a escala dos episódios
+            currentEpisodeElem.style.transform = 'scale(1)'; // Remove a escala do episódio atual
+            nextEpisodeElem.style.transform = 'scale(1.05)'; // Aplica a escala ao próximo episódio
+          }
+        }
+      });
+
+      // Função para voltar para o episódio anterior
+      document.getElementById('prev-btn').addEventListener('click', function() {
+        const currentEpisodeElem = document.querySelector('.bg-gray-700[style*="scale(1.05)"]');
+        if (currentEpisodeElem) {
+          // Encontre o episódio anterior (previousElementSibling)
+          let prevEpisodeElem = currentEpisodeElem.previousElementSibling;
+
+          // Verifique se o elemento anterior é realmente um episódio
+          while (prevEpisodeElem && !prevEpisodeElem.classList.contains('bg-gray-700')) {
+            prevEpisodeElem = prevEpisodeElem.previousElementSibling;
+          }
+
+          // Se encontramos o episódio anterior, inicie o áudio
+          if (prevEpisodeElem && prevEpisodeElem.classList.contains('bg-gray-700')) {
+            // Obtenha o título e o áudio do episódio anterior
+            const episodeTitle = prevEpisodeElem.querySelector('h3').innerText;
+            const audioSrc = prevEpisodeElem.getAttribute('data-audio-src'); // Atribua um atributo data-audio-src para cada episódio no HTML
+
+            // Chame a função que configura o player com o episódio anterior
+            setupPlayer(episodeTitle, audioSrc);
+
+            // Atualize a escala dos episódios
+            currentEpisodeElem.style.transform = 'scale(1)'; // Remove a escala do episódio atual
+            prevEpisodeElem.style.transform = 'scale(1.05)'; // Aplica a escala ao episódio anterior
+          }
+        }
+      });
+
+      document.querySelectorAll("#episodios-section .bg-gray-700").forEach(ep => {
+        ep.addEventListener("click", function () {
+          // Remove a escala de todos os episódios antes de aplicar ao clicado
+          document.querySelectorAll("#episodios-section .bg-gray-700").forEach(e => {
+            e.style.transform = "scale(1)";
+          });
+
+          // Aplica a escala ao episódio clicado
+          this.style.transform = "scale(1.05)";
+        });
+      });
+
+      // Funções de navegação para os botões no footer
+      document.getElementById('home').addEventListener('click', function() {
+        window.location.href = 'home.html'; // Redireciona para a página inicial
+      });
+
+      document.getElementById('search').addEventListener('click', function() {
+        window.location.href = 'search.html'; // Redireciona para a página de busca
+      });
+
+      document.getElementById('library').addEventListener('click', function() {
+        window.location.href = 'library.html'; // Redireciona para a página da biblioteca
+      });
+    </script>
+    <!-- Placeholder for additional content -->
+
+    <!-- Footer com efeito Glassmorphism -->
+    <div class="fixed bottom-0 left-0 right-0 p-4 flex justify-around glass-nav">
+      <div class="flex flex-col items-center nav-item" id="home">
+        <i class="fas fa-home text-white text-xl button-animate cursor-pointer hover:text-amaranto transition-colors duration-300"></i>
+        <span class="text-xs mt-1">Início</span>
+      </div>
+      <div class="flex flex-col items-center nav-item" id="search">
+        <i class="fas fa-search text-white text-xl button-animate cursor-pointer hover:text-amaranto transition-colors duration-300"></i>
+        <span class="text-xs mt-1">Buscar</span>
+      </div>
+      <div class="flex flex-col items-center nav-item" id="library">
+        <i class="fas fa-layer-group text-white text-xl button-animate cursor-pointer hover:text-amaranto transition-colors duration-300"></i>
+        <span class="text-xs mt-1">Sua Biblioteca</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
