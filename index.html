@@ -296,6 +296,11 @@
     </div>
 
     <script>
+    
+    window.addEventListener("load", () => {
+    const player = document.getElementById("player");
+    player.load(); // Isso carrega o primeiro áudio assim que a página abre
+});
       // Pulsação na imagem
       document.getElementById('strawberry-img').addEventListener('click', function() {
         this.classList.add('pulse');
