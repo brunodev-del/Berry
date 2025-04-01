@@ -199,7 +199,7 @@
     </div>
     <!-- Seção de Episódios -->
     <div id="episodios-section" class="mt-6">
-      <div class="bg-gray-700 p-4 rounded-lg mb-4" data-episodio="1" id="episodio-1" data-audio-src="/audio/introducao-morango.mp3">
+      <div class="bg-gray-700 p-4 rounded-lg mb-4" data-episodio="1" id="episodio-1" data-audio-src="introducaomorango.mp3">
         <h3 class="text-xl font-semibold text-white">Episódio 1: Introdução ao Morango</h3>
         <p class="text-gray-400">Neste episódio, exploramos a essência do cuidado e da atenção em um relacionamento.</p>
         <div class="flex mt-3 space-x-4 text-gray-400">
@@ -215,7 +215,7 @@
         </div>
       </div>
 
-      <div class="bg-gray-700 p-4 rounded-lg mb-4" data-episodio="2" id="episodio-2" data-audio-src="/audio/episodio2morango.mp3">
+      <div class="bg-gray-700 p-4 rounded-lg mb-4" data-episodio="2" id="episodio-2" data-audio-src="episodio2morango.mp3">
         <h3 class="text-xl font-semibold text-white">Episódio 2: O Cuidado Diário</h3>
         <p class="text-gray-400">Falamos sobre como a comunicação e o carinho são fundamentais para nutrir um amor duradouro.</p>
         <div class="flex mt-3 space-x-4 text-gray-400">
@@ -231,7 +231,7 @@
         </div>
       </div>
 
-      <div class="bg-gray-700 p-4 rounded-lg mb-4" data-episodio="3" id="episodio-3" data-audio-src="/audio/episodio3morango.mp3">
+      <div class="bg-gray-700 p-4 rounded-lg mb-4" data-episodio="3" id="episodio-3" data-audio-src="episodio3morango.mp3">
         <h3 class="text-xl font-semibold text-white">Episódio 3: Superando Desafios</h3>
         <p class="text-gray-400">Aqui discutimos como lidar com os desafios que surgem em qualquer relacionamento e como superá-los juntos.</p>
         <div class="flex mt-3 space-x-4 text-gray-400">
@@ -357,15 +357,15 @@
       }
 
       document.getElementById('episodio-1').addEventListener('click', function() {
-        setupPlayer('Episódio 1: Introdução ao Morango', '/audio/introducao-morango.mp3');
+        setupPlayer('Episódio 1: Introdução ao Morango', 'introducaomorango.mp3');
       });
 
       document.getElementById('episodio-2').addEventListener('click', function() {
-        setupPlayer('Episódio 2: O Cuidado Diário', '/audio/episodio2morango.mp3');
+        setupPlayer('Episódio 2: O Cuidado Diário', 'episodio2morango.mp3');
       });
 
       document.getElementById('episodio-3').addEventListener('click', function() {
-        setupPlayer('Episódio 3: Superando Desafios', '/audio/episodio3morango.mp3');
+        setupPlayer('Episódio 3: Superando Desafios', 'episodio3morango.mp3');
       });
 
       // Adicionar funcionalidade de pausa ao player
